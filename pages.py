@@ -41,15 +41,19 @@ class InventoryPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver, timeout=60)
 
-        self.item = #Заголовок любого товара: Здесь будет локатор по ID
-        self.add_jacket_to_catr_btn = #Кнопка Add to Cart для Sauce Labs Fleece Jacket: Здесь будет локатор XPATH
-        self.cart_btn = #Кнопка корзины: Здесь будет локатор XPATH
+        # Заголовок любого товара: Здесь будет локатор по ID
+        self.item = (By.ID, 'item_4_title_link')
+        # Кнопка Add to Cart для Sauce Labs Fleece Jacket: Здесь будет локатор XPATH
+        self.add_jacket_to_cart_btn = (By.XPATH, '//*[@id="add-to-cart-sauce-labs-fleece-jacket"]')
+        # Кнопка корзины: Здесь будет локатор XPATH
+        self.cart_btn = (By.XPATH, '//*[@class="shopping_cart_link"]')
+
 
     def choose_item(self):
         self.find_element(*self.item).click()
 
     def add_jacket_to_cart_btn_click(self):
-        self.find_elements(*self.add_jacket_to_catr_btn).click()
+        self.find_element(*self.add_jacket_to_cart_btn).click()
 
     def cart_btn_click(self):
         self.find_element(*self.cart_btn).click()
@@ -58,22 +62,25 @@ class ItemPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver, timeout=60)
 
-        self.add_to_cart_btn = #Кнопка Add to Cart: Здесь будет локатор XPATH
-        self.back_to_products = #Кнопка Back to products: Здесь будет локатор XPATH
+        # Кнопка Add to Cart: Здесь будет локатор XPATH
+        self.add_to_cart_btn = (By.XPATH, '//*[@name="add-to-cart"]')
+        # Кнопка Back to products: Здесь будет локатор XPATH
+        self.back_to_products = (By.XPATH, '//*[@name="back-to-products"]')
 
     def add_to_cart_btn_click(self):
         self.find_element(*self.add_to_cart_btn).click()
 
-    def back_to_products(self):
-        self.find_element(*self.back_to_products()).click()
+    def return_to_products(self):
+        self.find_element(*self.back_to_products).click()
 
 class CartPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver, timeout=60)
 
-        self.item_list =    #Локатор XPATH элемента продукта. Локатор должен находить
-                            # ровно 2 элемента на странице: первый и второй товар
-                            # то есть в DevTools вы должны видеть "1 of 2" при поиске данного локатора
+        # Локатор XPATH элемента продукта. Локатор должен
+        # находить ровно 2 элемента на странице: первый и второй товар,
+        # то есть в DevTools вы должны видеть "1 of 2" при поиске данного локатора
+        self.item_list = (By.XPATH, '//*[@class="cart_item"]')
 
     def number_of_products(self):
         return len(self.find_elements(*self.item_list))

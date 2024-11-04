@@ -1,4 +1,4 @@
-from pages import BasePage, LoginPage, InventoryPage, ItemPage, CartPage
+from pages import LoginPage, InventoryPage, ItemPage, CartPage
 
 
 def test_est_1_login(driver):
@@ -10,10 +10,11 @@ def test_est_1_login(driver):
 
     item_page = ItemPage(driver)
     item_page.add_to_cart_btn_click()
-    item_page.back_to_products()
+    item_page.return_to_products()
 
     inventory_page.add_jacket_to_cart_btn_click()
     inventory_page.cart_btn_click()
+
 
     cart_page = CartPage(driver)
     assert cart_page.number_of_products() == 2
