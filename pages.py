@@ -1,3 +1,4 @@
+import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions
@@ -36,14 +37,27 @@ class LoginPage(BasePage):
         self.find_element(*self.password).send_keys(password)
         self.find_element(*self.login_btn).click()
 
+    @allure.step(r'Ввести логин')
+    def input_login(self, login: str) -> None:
+        self.find_element(*self.login).send_keys(login)
+
+    @allure.step(r'Ввести пароль"')
+    def input_password(self, password: str) -> None:
+        self.find_element(*self.password).send_keys(password)
+
+    @allure.step(r'Нажать кнопку "LOGIN"')
+    def login_button_click(self) -> None:
+        self.find_element(*self.login_btn).click()
+
 
 class InventoryPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver, timeout=60)
 
-        self.item = #Заголовок любого товара: Здесь будет локатор по ID
-        self.add_jacket_to_catr_btn = #Кнопка Add to Cart для Sauce Labs Fleece Jacket: Здесь будет локатор XPATH
-        self.cart_btn = #Кнопка корзины: Здесь будет локатор XPATH
+        self.page_url = 'https://www.saucedemo.com/inventory.html'
+        self.item = () #Заголовок любого товара: Здесь будет локатор по ID
+        self.add_jacket_to_catr_btn = () #Кнопка Add to Cart для Sauce Labs Fleece Jacket: Здесь будет локатор XPATH
+        self.cart_btn = () #Кнопка корзины: Здесь будет локатор XPATH
 
     def choose_item(self):
         self.find_element(*self.item).click()
@@ -54,24 +68,28 @@ class InventoryPage(BasePage):
     def cart_btn_click(self):
         self.find_element(*self.cart_btn).click()
 
+    @allure.step(r'Проверить, что открыта страница "https://www.saucedemo.com/inventory.html"')
+    def check_inventory_page_open(self) -> bool:
+        return self.get_current_url() == self.page_url
+
 class ItemPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver, timeout=60)
 
-        self.add_to_cart_btn = #Кнопка Add to Cart: Здесь будет локатор XPATH
-        self.back_to_products = #Кнопка Back to products: Здесь будет локатор XPATH
+        self.add_to_cart_btn = () #Кнопка Add to Cart: Здесь будет локатор XPATH
+        self.back_to_products = () #Кнопка Back to products: Здесь будет локатор XPATH
 
     def add_to_cart_btn_click(self):
         self.find_element(*self.add_to_cart_btn).click()
 
     def back_to_products(self):
-        self.find_element(*self.back_to_products()).click()
+        self.find_element(*self.back_to_products).click()
 
 class CartPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver, timeout=60)
 
-        self.item_list =    #Локатор XPATH элемента продукта. Локатор должен находить
+        self.item_list = ()   #Локатор XPATH элемента продукта. Локатор должен находить
                             # ровно 2 элемента на странице: первый и второй товар
                             # то есть в DevTools вы должны видеть "1 of 2" при поиске данного локатора
 
