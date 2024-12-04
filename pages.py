@@ -75,11 +75,15 @@ class InventoryPage(BasePage):
 
     @allure.step(r'Проверить, что открыта страница "https://www.saucedemo.com/inventory.html"')
     def check_inventory_page_open(self) -> None:
-        if self.get_current_url() == self.page_url:
-            logging.info('[Success] You successfully was logged in to account')
-        else:
-            logging.warning('[Failed] Login attempt was failed, check login and password')
+        assert self.get_current_url() == self.page_url, (
+         '[FAILED] Login attempt was failed, check login and password'
+        )
 
+    @allure.step(r'Проверить, что страница "https://www.saucedemo.com/inventory.html" не открывается')
+    def check_inventory_page_not_open(self) -> None:
+        assert self.get_current_url() != self.page_url, (
+            '[FAILED] Login attempt was not failed with incorrect login and password'
+        )
 
 class ItemPage(BasePage):
     def __init__(self, driver):

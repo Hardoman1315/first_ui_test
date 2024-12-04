@@ -49,4 +49,4 @@ def test_invalid_auth(driver):
     with allure.step('Нажать кнопку "Login"'):
         auth_page.login_button_click()
 
-    InventoryPage(driver).check_inventory_page_open()
+    InventoryPage(driver).check_inventory_page_not_open()
