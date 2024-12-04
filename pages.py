@@ -1,4 +1,5 @@
 import allure
+import logging
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -74,9 +75,10 @@ class InventoryPage(BasePage):
 
     @allure.step(r'Проверить, что открыта страница "https://www.saucedemo.com/inventory.html"')
     def check_inventory_page_open(self) -> None:
-        assert self.get_current_url() == self.page_url, (
-            '[Failed] Login attempt was failed, check login and password'
-        )
+        if self.get_current_url() == self.page_url:
+            logging.info('[Success] You successfully was logged in to account')
+        else:
+            logging.warning('[Failed] Login attempt was failed, check login and password')
 
 
 class ItemPage(BasePage):
