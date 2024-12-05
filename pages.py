@@ -1,5 +1,4 @@
 import allure
-import logging
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -30,9 +29,9 @@ class LoginPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver, timeout=60)
 
-        self.login = (By.ID, 'user-name')  # Локатор по ID для элемента строки ввода login
-        self.password = (By.ID, 'password')  # Локатор по ID для элемента строки ввода password
-        self.login_btn = (By.NAME, 'login-button')  # Локатор по Name для элемента кнопка Login
+        self.login = (By.ID, 'user-name')           #Локатор по ID для элемента строки ввода login
+        self.password = (By.ID, 'password')         #Локатор по ID для элемента строки ввода password
+        self.login_btn = (By.NAME, 'login-button')  #Локатор по Name для элемента кнопка Login
 
     def auth(self, login: str, password: str) -> None:
         self.find_element(*self.login).send_keys(login)
