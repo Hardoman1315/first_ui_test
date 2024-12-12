@@ -1,8 +1,6 @@
 import allure
-
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-import selenium.webdriver.support.expected_conditions as ec
+
 
 from Pages.base_page import BasePage
 
@@ -26,15 +24,15 @@ class CartPage(BasePage):
 
     @allure.step('Проверить наличие "Sauce Labs Bolt T-Shirt"')
     def tshirt_availability(self) -> None:
-        WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '//*[contains(text(), "Sauce Labs Bolt T-Shirt")]'))
+        locator = (By.XPATH, '//*[contains(text(), "Sauce Labs Bolt T-Shirt")]')
+        assert self.element_is_visible(locator).text == 'Sauce Labs Bolt T-Shirt', (
+            '[FAILED] "Sauce Labs Bolt T-Shirt" title not found'
         )
 
     @allure.step('Сравнить цену в магазине и корзине')
     def compare_price(self) -> str:
-        cart_price = WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '//*[@class="inventory_item_price"]'))
-        ).text
+        locator = (By.XPATH, '//*[@class="inventory_item_price"]')
+        cart_price = self.element_is_visible(locator).text
         cart_price = cart_price.replace('$', '').strip()
         return cart_price
 

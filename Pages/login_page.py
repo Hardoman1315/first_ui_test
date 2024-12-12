@@ -1,5 +1,4 @@
 import allure
-
 from selenium.webdriver.common.by import By
 from Pages.base_page import BasePage
 
@@ -12,6 +11,7 @@ class LoginPage(BasePage):
         self.password = (By.ID, 'password')         #Локатор по ID для элемента строки ввода password
         self.login_btn = (By.NAME, 'login-button')  #Локатор по Name для элемента кнопка Login
 
+    @allure.step('Войти в аккаунт')
     def auth(self, login: str, password: str) -> None:
         self.find_element(*self.login).send_keys(login)
         self.find_element(*self.password).send_keys(password)

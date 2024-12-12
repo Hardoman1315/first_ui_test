@@ -1,5 +1,4 @@
 import allure
-
 import selenium.webdriver.support.expected_conditions as ec
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -49,8 +48,9 @@ class CheckoutPage(BasePage):
 
     @allure.step('Проверить наличие "Sauce Labs Bolt T-Shirt"')
     def tshirt_availability(self) -> None:
-        WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '//*[contains(text(), "Sauce Labs Bolt T-Shirt")]'))
+        locator = (By.XPATH, '//*[contains(text(), "Sauce Labs Bolt T-Shirt")]')
+        assert self.element_is_visible(locator).text == 'Sauce Labs Bolt T-Shirt', (
+            '[FAILED] "Sauce Labs Bolt T-Shirt" title is not found'
         )
 
     @allure.step('Сравнить цену в магазине и корзине')
@@ -63,39 +63,43 @@ class CheckoutPage(BasePage):
 
     @allure.step('Проверить наличие заголовка "Payment Information:"')
     def payment_title(self) -> None:
-        WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '//*[contains(text(), "Payment Information:")]'))
+        locator = (By.XPATH, '//*[contains(text(), "Payment Information:")]')
+        assert self.element_is_visible(locator).text == 'Payment Information:', (
+            '[FAILED] "Payment Information" title is not found'
         )
 
     @allure.step('Проверить что способ оплаты соответствует "SauceCard #31337"')
     def payment_card(self) -> None:
-        WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '//*[contains(text(), "SauceCard #31337")]'))
+        locator = (By.XPATH, '//*[contains(text(), "SauceCard #31337")]')
+        assert self.element_is_visible(locator).text == 'SauceCard #31337', (
+            '[FAILED] Payment method is not "SauceCard #31337"'
         )
 
     @allure.step('Проверить наличие заголовка "Shipping Information:"')
     def shipping_title(self) -> None:
-        WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '//*[contains(text(), "Shipping Information:")]'))
+        locator = (By.XPATH, '//*[contains(text(), "Shipping Information:")]')
+        assert self.element_is_visible(locator).text == 'Shipping Information:', (
+            '[FAILED] "Shipping Information" title is not found'
         )
 
     @allure.step('Проверить что способ доставки соответствует "Free Pony Express Delivery!"')
     def shipping_method(self) -> None:
-        WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '//*[contains(text(), "Free Pony Express Delivery!")]'))
+        locator = (By.XPATH, '//*[contains(text(), "Free Pony Express Delivery!")]')
+        assert self.element_is_visible(locator).text == 'Free Pony Express Delivery!', (
+            '[FAILED] "Free Pony Express Delivery!" title is not found'
         )
 
     @allure.step('Проверить наличие заголовка "Price Total:"')
     def total_price(self) -> None:
-        WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '//*[contains(text(), "Price Total:")]'))
+        locator = (By.XPATH, '//*[contains(text(), "Price Total:")]')
+        assert self.element_is_visible(locator).text == 'Price Total:', (
+            '[FAILED] "Price total" title is not found'
         )
 
     @allure.step('Сравнить цену в магазине и на момент оплаты')
     def payment_price(self) -> str:
-        cart_price = WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '//*[@class="inventory_item_price"]'))
-        ).text
+        locator = (By.XPATH, '//*[@class="inventory_item_price"]')
+        cart_price = self.element_is_visible(locator).text
         cart_price = cart_price.replace('$', '').strip()
         return cart_price
 
@@ -103,10 +107,8 @@ class CheckoutPage(BasePage):
     # и я решил что это опечатка
     @allure.step('Проверить что поле "tax" равно $1.28')
     def tax(self) -> str:
-        tax_value = WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '//*[@class="summary_tax_label"]'))
-        ).text
-
+        locator = (By.XPATH, '//*[@class="summary_tax_label"]')
+        tax_value = self.element_is_visible(locator).text
         tax_value = tax_value.replace('Tax: $', '').strip()
         assert tax_value == '1.28', (
             '[FAILED] tax not equal to 1.28'
@@ -114,53 +116,54 @@ class CheckoutPage(BasePage):
         return tax_value
 
     @allure.step('Проверить что "Total" равен цене за товар + налогу')
-    def total_price(self) -> None:
-        price = CheckoutPage.payment_price()
-        tax = CheckoutPage.tax()
+    def total_price(self) -> str:
+        price = self.payment_price()
+        tax = self.tax()
 
-        price = int(price)
-        tax = int(tax)
+        price = float(price)
+        tax = float(tax)
 
-        tax_value = WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '//*[@class="summary_total_label"]'))
-        ).text
+        locator = (By.XPATH, '//*[@class="summary_total_label"]')
+        total_price = self.element_is_visible(locator).text
 
-        total_price = tax_value.replace('Total: $', '').strip()
-        total_price = int(total_price)
+        total_price = total_price.replace('Total: $', '').strip()
+        total_price = float(total_price)
 
         assert price + tax == total_price, (
             '[FAILED] total price are not equal to sum of price and tax'
         )
 
+        return str(price)
+
     @allure.step('Нажать кнопку "Finish"')
     def finish_button(self) -> None:
-        WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '//*[@id="finish"]'))
-        ).click()
+        locator = (By.XPATH, '//*[@id="finish"]')
+        self.element_is_visible(locator).click()
 
     @allure.step('Проверить наличие надписи "Checkout: Complete!"')
     def is_checkout_complete(self) -> None:
-        WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '// *[contains(text(), "Checkout: Complete!")]'))
+        locator = (By.XPATH, '// *[contains(text(), "Checkout: Complete!")]')
+        assert self.element_is_visible(locator).text == 'Checkout: Complete!', (
+            '[FAILED] "Checkout: Complete!" title is not found'
         )
 
     @allure.step('Проверить наличие заголовка "Thank you for your order!"')
     def is_thank_for_order(self) -> None:
-        WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '// *[contains(text(), "Thank you for your order!")]'))
+        locator = (By.XPATH, '// *[contains(text(), "Thank you for your order!")]')
+        assert self.element_is_visible(locator).text == 'Thank you for your order!', (
+            '[FAILED] "Thank you for your order!" title is not found'
         )
 
     @allure.step('Проверить наличие надписи "Your order has been dispatched, '
                  'and will arrive just as fast as the pony can get there!"')
     def delivery_text(self) -> None:
-        WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '// *[contains(text(), '
-                                                      '"Your order has been dispatched, '
-                                                      'and will arrive just as fast as the pony can get there!")]'))
-        )
+        locator = (By.XPATH, '// *[contains(text(), "Your order has been dispatched, '
+                             'and will arrive just as fast as the pony can get there!")]')
+        assert self.element_is_visible(locator).text == ('Your order has been dispatched, '
+                                                         'and will arrive just as fast as '
+                                                         'the pony can get there!')
 
     @allure.step('Проверить наличие кнопки "Back Home"')
     def back_button_availability(self) -> None:
-        WebDriverWait(self.driver, 10).until(
-            ec.presence_of_element_located((By.XPATH, '//*[@id="back-to-products"]'))
-        )
+        locator = (By.XPATH, '//*[@id="back-to-products"]')
+        self.element_is_visible(locator)

@@ -16,8 +16,10 @@ def test_cart_workability(driver):
 
     inv_page.add_tshirt_to_cart_btn_click()
     inv_page.cart_badge_number()
-    inventory_price = inv_page.cart_btn_click()
+    inventory_price = inv_page.get_price()
+    inv_page.cart_btn_click()
     cart_page = CartPage(driver)
+    cart_page.number_of_products()
     cart_page.tshirt_availability()
     cart_price = cart_page.compare_price()
 
@@ -30,6 +32,7 @@ def test_cart_workability(driver):
     checkout_page = CheckoutPage(driver)
 
     checkout_page.fill_fields('Masha', 'Smirnova', '432001')
+    checkout_page.number_of_products()
     checkout_page.tshirt_availability()
     cart_price = checkout_page.compare_price()
 
@@ -39,13 +42,14 @@ def test_cart_workability(driver):
 
     checkout_page.payment_title()
     checkout_page.payment_card()
-    payment_price = checkout_page.payment_price()
+    checkout_page.shipping_title()
+    checkout_page.shipping_method()
+    payment_price = checkout_page.total_price()
 
     assert inventory_price == payment_price, (
         '[FAILED] prices are different'
     )
 
-    checkout_page.tax()
     checkout_page.finish_button()
 
     checkout_page.is_checkout_complete()
