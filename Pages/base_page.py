@@ -15,10 +15,6 @@ class BasePage:
         return self.wait.until(ec.visibility_of_element_located((by, value)),
                                message=f'Элемент {by, value} не найден')
 
-    def find_elements(self, by: By, value: str) -> list[WebElement]:
-        return self.wait.until(ec.visibility_of_all_elements_located((by, value)),
-                               message=f'Элементы {by, value} не найдены')
-
     def get_current_url(self) -> str:
         return self.driver.current_url
 
@@ -26,3 +22,21 @@ class BasePage:
         return WebDriverWait(self.driver, 10).until(
             ec.presence_of_element_located(locator)
         )
+
+    def elements_is_visible(self, locator: WebElement or tuple[str, str]) -> list[WebElement]:
+        return WebDriverWait(self.driver, 10).until(
+            ec.presence_of_all_elements_located(locator)
+        )
+
+    def get_element_text(self, locator: WebElement or tuple[str, str]) -> str:
+        return WebDriverWait(self.driver, 10).until(
+            ec.presence_of_element_located(locator)
+        ).text
+
+    def click_element(self, locator: WebElement or tuple[str, str]) -> None:
+        return WebDriverWait(self.driver, 10).until(
+            ec.presence_of_element_located(locator)
+        ).click()
+
+    def insert_value(self, locator: WebElement or tuple[str, str], value: str) -> None:
+        self.element_is_visible(locator).send_keys(value)

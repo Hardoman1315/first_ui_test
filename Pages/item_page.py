@@ -12,7 +12,7 @@ class ItemPage(BasePage):
         self.back_to_products = (By.XPATH, '//*[@name="back-to-products"]')
 
     def add_to_cart_btn_click(self):
-        self.find_element(*self.add_to_cart_btn).click()
+        self.click_element(self.add_to_cart_btn)
 
     def return_to_products(self):
-        self.find_element(*self.back_to_products).click()
+        self.click_element(self.back_to_products)

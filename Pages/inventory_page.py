@@ -9,27 +9,27 @@ class InventoryPage(BasePage):
 
         self.page_url = 'https://www.saucedemo.com/inventory.html'
 
+    tshirt_btn = (By.XPATH, '//*[@id="add-to-cart-sauce-labs-bolt-t-shirt"]')
+    cart_badge = (By.XPATH, '//*[@class="shopping_cart_badge"]')
+    item_price = (By.XPATH, '(//*[@class="inventory_item_price"])[3]')
+    cart_btn = (By.XPATH, '//*[@class="shopping_cart_link"]')
+
     @allure.step('Нажать "Add to cart" на предмете "Sauce Labs Bolt T-Shirt"')
     def add_tshirt_to_cart_btn_click(self) -> None:
-        locator = (By.XPATH, '//*[@id="add-to-cart-sauce-labs-bolt-t-shirt"]')
-        self.element_is_visible(locator).click()
+        self.click_element(self.tshirt_btn)
 
     @allure.step('Проверить что число рядом с корзиной равно "1"')
-    def cart_badge_number(self) -> None:
-        locator = (By.XPATH, '//*[@class="shopping_cart_badge"]')
-        badge_value = self.element_is_visible(locator)
-        assert badge_value.text == '1', (
+    def compare_cart_badge_number(self) -> None:
+        assert self.get_element_text(self.cart_badge) == '1', (
             '[FAILED] Cart number not equal to "1"'
         )
 
     @allure.step('Получить цену товара в магазине')
     def get_price(self):
-        locator = (By.XPATH, '(//*[@class="inventory_item_price"])[3]')
-        price_text = self.element_is_visible(locator).text
+        price_text = self.get_element_text(self.item_price)
         price_text = price_text.replace('$', '').strip()
         return price_text
 
     @allure.step('Нажать на иконку корзины')
-    def cart_btn_click(self) -> str:
-        locator = (By.XPATH, '//*[@class="shopping_cart_link"]')
-        self.element_is_visible(locator).click()
+    def cart_btn_click(self) -> None:
+        self.click_element(self.cart_btn)

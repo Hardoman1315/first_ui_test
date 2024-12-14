@@ -7,24 +7,24 @@ class LoginPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver, timeout=60)
 
-        self.login = (By.ID, 'user-name')           #Локатор по ID для элемента строки ввода login
-        self.password = (By.ID, 'password')         #Локатор по ID для элемента строки ввода password
-        self.login_btn = (By.NAME, 'login-button')  #Локатор по Name для элемента кнопка Login
+    login = (By.ID, 'user-name')           #Локатор по ID для элемента строки ввода login
+    password = (By.ID, 'password')         #Локатор по ID для элемента строки ввода password
+    login_btn = (By.NAME, 'login-button')  #Локатор по Name для элемента кнопка Login
 
     @allure.step('Войти в аккаунт')
     def auth(self, login: str, password: str) -> None:
-        self.find_element(*self.login).send_keys(login)
-        self.find_element(*self.password).send_keys(password)
-        self.find_element(*self.login_btn).click()
+        self.insert_value(self.login, login)
+        self.insert_value(self.password, password)
+        self.click_element(self.login_btn)
 
-    @allure.step(r'Ввести логин')
-    def input_login(self, login: str) -> None:
-        self.find_element(*self.login).send_keys(login)
+    @allure.step('Ввести логин')
+    def insert_login(self, login: str) -> None:
+        self.insert_value(self.login, login)
 
-    @allure.step(r'Ввести пароль"')
-    def input_password(self, password: str) -> None:
-        self.find_element(*self.password).send_keys(password)
+    @allure.step('Ввести пароль"')
+    def insert_password(self, password: str) -> None:
+        self.insert_value(self.password, password)
 
-    @allure.step(r'Нажать кнопку "LOGIN"')
-    def login_button_click(self) -> None:
-        self.find_element(*self.login_btn).click()
+    @allure.step('Нажать кнопку "LOGIN"')
+    def click_login_button(self) -> None:
+        self.click_element(self.login_btn)
