@@ -28,7 +28,7 @@ class CartPage(BasePage):
             '[FAILED] "Sauce Labs Bolt T-Shirt" title not found'
         )
 
-    @allure.step('Сравнить цену в магазине и корзине')
+    @allure.step('Получить цену в корзине')
     def get_price(self) -> str:
         price_value = self.get_element_text(self.cart_price)
         price_value = price_value.replace('$', '').strip()
