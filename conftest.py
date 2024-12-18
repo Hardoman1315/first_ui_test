@@ -8,6 +8,7 @@ def driver():
     options = Options()
     options.add_argument('--enable-javascript')
     _driver = webdriver.Chrome(options=options)
+    _driver.minimize_window()
     _driver.get('https://www.saucedemo.com')
     yield _driver
     _driver.quit()
